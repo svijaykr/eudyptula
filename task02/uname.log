@@ -1,0 +1,12 @@
+Linux eudyptula 3.15.0-rc3-00177-g0384dca #1 SMP Sat May 3 21:58:42 BST 2014 x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Sat May  3 22:04:26 2014
+node@eudyptula:~$ uname -a
+Linux eudyptula 3.15.0-rc3-00177-g0384dca #1 SMP Sat May 3 21:58:42 BST 2014 x86_64 GNU/Linux
+node@eudyptula:~$
