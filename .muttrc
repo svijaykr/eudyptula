@@ -1,0 +1,15 @@
+set from = <email address>
+set realname = <real name>
+set imap_user = <email address>
+set imap_pass = <password>
+set folder = "imaps://imap.googlemail.com:993"
+set spoolfile = "+INBOX"
+set postponed = "+[Google Mail]/Drafts"
+set trash = "+[Google Mail]/Trash"
+set header_cache =~/.mutt/cache/headers
+set message_cachedir =~/.mutt/cache/bodies
+set certificate_file =~/.mutt/certificates
+set smtp_url = "smtps://<email address>@smtp.gmail.com:465/"
+set smtp_pass = <password>
+set move = no
+set imap_keepalive = 900
