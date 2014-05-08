@@ -3,8 +3,9 @@
 
 static int __init hello_init(void)
 {
-	printk(KERN_DEBUG "Hello World!\n");
+	pr_debug("Hello World!\n");
 	return 0;
+
 }
 
 static void __exit hello_exit(void)
