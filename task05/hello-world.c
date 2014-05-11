@@ -35,10 +35,7 @@ static struct usb_driver hello_driver = {
 
 static int __init hello_init(void)
 {
-	int result;
-	result = usb_register(&hello_driver);
-
-	if (!result)
+	if (!usb_register(&hello_driver))
 		pr_info("Hello World!\n");
 
 	return 0;
