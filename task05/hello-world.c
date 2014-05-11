@@ -35,8 +35,8 @@ static int __init hello_init(void)
 {
 	int result;
 	result = usb_register(&hello_driver);
-	if(result)
-		pr_debug("Hello World!\n");
+	if(!result)
+		pr_info("Hello World!\n");
 	return 0;
 
 }
