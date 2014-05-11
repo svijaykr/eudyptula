@@ -4,6 +4,9 @@
 #include <linux/usb/input.h>
 #include <linux/hid.h>
 
+MODULE_LICENSE("GPL");
+MODULE_DESCRIPTION("USB Keyboard says hello to the world");
+
 static struct usb_device_id hello_id_table[] = {
 	{ USB_INTERFACE_INFO(USB_INTERFACE_CLASS_HID,
 		USB_INTERFACE_SUBCLASS_BOOT,
@@ -49,5 +52,3 @@ static void __exit hello_exit(void)
 	return;
 }
 module_exit(hello_exit);
-
-MODULE_LICENSE("GPL");
