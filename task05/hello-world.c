@@ -5,7 +5,7 @@
 #include <linux/hid.h>
 
 MODULE_LICENSE("GPL");
-MODULE_DESCRIPTION("USB Keyboard says hello to the world");
+MODULE_DESCRIPTION("USB keyboard says hello to the world");
 
 static struct usb_device_id hello_id_table[] = {
 	{ USB_INTERFACE_INFO(USB_INTERFACE_CLASS_HID,
