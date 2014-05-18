@@ -1,0 +1,1 @@
+cmd_/home/node/eudyptula/task06/hello-world.ko := ld -r -m elf_x86_64 -T /usr/src/linux-headers-3.2.0-4-common/scripts/module-common.lds --build-id  -o /home/node/eudyptula/task06/hello-world.ko /home/node/eudyptula/task06/hello-world.o /home/node/eudyptula/task06/hello-world.mod.o
