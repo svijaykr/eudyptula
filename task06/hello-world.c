@@ -3,30 +3,29 @@
 #include <linux/miscdevice.h>
 #include <linux/fs.h>
 #include <linux/kernel.h>
-#include <asm/uaccess.h>
 #include <linux/errno.h>
+#include <linux/uaccess.h>
 
 static int hello_open(struct inode *inp, struct file *fp);
 static int hello_release(struct inode *inp, struct file *fp);
-static ssize_t hello_read(struct file *fp, char __user *user, size_t size, 
+static ssize_t hello_read(struct file *fp, char __user *user, size_t size,
 			loff_t *offs);
 
-static ssize_t hello_write(struct file *fp, const char __user *user, size_t size,
-			loff_t *offs);
+static ssize_t hello_write(struct file *fp, const char __user *user,
+			size_t size, loff_t *offs);
 
 static const struct file_operations hello_fops = {
-        .owner = THIS_MODULE,
-        .read = hello_read,
+	.owner = THIS_MODULE,
+	.read = hello_read,
 	.open = hello_open,
 	.release = hello_release,
 	.write = hello_write
 	};
 
-
 static struct miscdevice hello_misc = {
-        .minor = MISC_DYNAMIC_MINOR,
-        .name = "eudyptula",
-        .fops = &hello_fops,
+	.minor = MISC_DYNAMIC_MINOR,
+	.name = "eudyptula",
+	.fops = &hello_fops,
 	};
 
 static int __init hello_init(void)
@@ -53,7 +52,6 @@ static void __exit hello_exit(void)
 }
 module_exit(hello_exit);
 
-
 int hello_open(struct inode *inp, struct file *fp)
 {
 	pr_debug(">> hello_open()");
@@ -66,20 +64,20 @@ int hello_release(struct inode *inp, struct file *fp)
 	return 0;
 }
 
-ssize_t hello_read(struct file *fp, char __user *user, size_t size, 
+ssize_t hello_read(struct file *fp, char __user *user, size_t size,
 			loff_t *offs)
 {
 	char buf[4] = "";
 	pr_debug(">> hello_read()");
-	sprintf(buf,"%d\n", hello_misc.minor);
+	sprintf(buf, "%d\n", hello_misc.minor);
 	pr_debug("Sending %s", buf);
 
-	if((*offs) == (strlen(buf) + 1))
+	if ((*offs) == (strlen(buf) + 1))
 		return 0;
-	else if(!copy_to_user(user, buf, (strlen(buf) + 1)))
+	else if (!copy_to_user(user, buf, (strlen(buf) + 1)))
 		return ((*offs) += (strlen(buf) + 1));
 	else
-		return EAGAIN;
+		return -EAGAIN;
 }
 
 ssize_t hello_write(struct file *fp, const char __user *user, size_t size,
@@ -92,8 +90,8 @@ ssize_t hello_write(struct file *fp, const char __user *user, size_t size,
 	pr_debug("size:%lu ", size);
 	pr_debug("offset:%lld ", (*offs));
 
-	if ((strlen(buf_mine) == (size - 1)) && 
-		!copy_from_user(buf_arg, user, strlen(buf_mine) + 1)){
+	if ((strlen(buf_mine) == (size - 1)) &&
+		!copy_from_user(buf_arg, user, strlen(buf_mine) + 1)) {
 		pr_debug("received: %s", buf_arg);
 		pr_debug("mine: %s", buf_mine);
 		return strncmp(buf_mine, buf_arg, strlen(buf_mine)) ? -EINVAL :
