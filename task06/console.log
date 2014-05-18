@@ -1,0 +1,33 @@
+root@eudyptula:/home/node/eudyptula/task06# make
+make -C /lib/modules/3.2.0-4-amd64/build M=/home/node/eudyptula/task06 modules
+make[1]: Entering directory `/usr/src/linux-headers-3.2.0-4-amd64'
+  CC [M]  /home/node/eudyptula/task06/hello-world.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/node/eudyptula/task06/hello-world.mod.o
+  LD [M]  /home/node/eudyptula/task06/hello-world.ko
+make[1]: Leaving directory `/usr/src/linux-headers-3.2.0-4-amd64'
+root@eudyptula:/home/node/eudyptula/task06# insmod hello-world.ko
+root@eudyptula:/home/node/eudyptula/task06# cat /dev/eudyptula
+56
+root@eudyptula:/home/node/eudyptula/task06# echo 56 > /dev/eudyptula
+root@eudyptula:/home/node/eudyptula/task06# echo 55 > /dev/eudyptula
+bash: echo: write error: Invalid argument
+root@eudyptula:/home/node/eudyptula/task06# echo 567 > /dev/eudyptula
+bash: echo: write error: Invalid argument
+root@eudyptula:/home/node/eudyptula/task06# cat /proc/misc
+ 56 eudyptula
+ 57 rfkill
+223 uinput
+237 loop-control
+ 58 vboxuser
+ 59 vboxguest
+ 60 network_throughput
+ 61 network_latency
+ 62 cpu_dma_latency
+  1 psaux
+228 hpet
+231 snapshot
+227 mcelog
+ 63 vga_arbiter
+root@eudyptula:/home/node/eudyptula/task06#
