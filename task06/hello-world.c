@@ -39,8 +39,9 @@ module_exit(hello_exit);
 ssize_t hello_read(struct file *fp, char __user *user, size_t size,
 			loff_t *offs)
 {
-	return (*offs) ? 0 :
-		((*offs) = sprintf(user, "%d\n", hello_misc.minor) + 1);
+	char buf[4] = "";
+	int len = sprintf(buf, "%d\n", hello_misc.minor) + 1;
+	return (*offs) ? 0 : ((*offs) = copy_to_user(user, buf, len) + len);
 }
 
 ssize_t hello_write(struct file *fp, const char __user *user, size_t size,
