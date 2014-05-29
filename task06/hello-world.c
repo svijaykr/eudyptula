@@ -12,6 +12,11 @@ static ssize_t hello_read(struct file *fp, char __user *user, size_t size,
 static ssize_t hello_write(struct file *fp, const char __user *user,
 			size_t size, loff_t *offs);
 
+#define MINOR_SIZE 3
+
+static char minor[MINOR_SIZE] = "";
+
+
 static const struct file_operations hello_fops = {
 	.owner = THIS_MODULE,
 	.read = hello_read,
@@ -26,8 +31,11 @@ static struct miscdevice hello_misc = {
 
 static int __init hello_init(void)
 {
-	return misc_register(&hello_misc);
+	int status = misc_register(&hello_misc);
+	snprintf(minor, MINOR_SIZE, "%d", hello_misc.minor);
+	return status;
 }
+
 module_init(hello_init);
 
 static void __exit hello_exit(void)
@@ -39,24 +47,16 @@ module_exit(hello_exit);
 ssize_t hello_read(struct file *fp, char __user *user, size_t size,
 			loff_t *offs)
 {
-	char buf[4] = "";
-	int len = sprintf(buf, "%d\n", hello_misc.minor) + 1;
-	return (*offs) ? 0 : ((*offs) = copy_to_user(user, buf, len) + len);
+	return !copy_to_user(user, minor, MINOR_SIZE) ? MINOR_SIZE : 0;
 }
 
 ssize_t hello_write(struct file *fp, const char __user *user, size_t size,
 			loff_t *offs)
 {
-	char buf_mine[4] = "";
-	char buf_arg[4] = "";
-	sprintf(buf_mine, "%d", hello_misc.minor);
-
-	if ((strlen(buf_mine) == (size - 1)) &&
-		!copy_from_user(buf_arg, user, strlen(buf_mine) + 1)) {
-		return strncmp(buf_mine, buf_arg, strlen(buf_mine)) ? -EINVAL :
-			size;
-	} else
-		return -EINVAL;
+	char tmp[MINOR_SIZE] = "";
+	int status = copy_from_user(tmp, user, MINOR_SIZE);
+	status += strncmp(tmp, minor, MINOR_SIZE - 1);
+	return status ? -EINVAL : size;
 }
 
 MODULE_LICENSE("GPL");
