@@ -47,16 +47,21 @@ module_exit(hello_exit);
 ssize_t hello_read(struct file *fp, char __user *user, size_t size,
 			loff_t *offs)
 {
-	return !copy_to_user(user, minor, MINOR_SIZE) ? MINOR_SIZE : 0;
+	return simple_read_from_buffer(user, size, offs, minor, strlen(minor));
 }
 
 ssize_t hello_write(struct file *fp, const char __user *user, size_t size,
 			loff_t *offs)
 {
 	char tmp[MINOR_SIZE] = "";
-	int status = copy_from_user(tmp, user, MINOR_SIZE);
-	status += strncmp(tmp, minor, MINOR_SIZE - 1);
-	return status ? -EINVAL : size;
+	int status = 0;
+
+	if (MINOR_SIZE == size) {
+		status = copy_from_user(tmp, user, MINOR_SIZE);
+		status += strncmp(tmp, minor, MINOR_SIZE - 1);
+		return status ? -EINVAL : size;
+	} else
+		return -EINVAL;
 }
 
 MODULE_LICENSE("GPL");
