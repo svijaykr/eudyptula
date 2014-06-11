@@ -54,14 +54,19 @@ ssize_t hello_write(struct file *fp, const char __user *user, size_t size,
 			loff_t *offs)
 {
 	char tmp[MINOR_SIZE] = "";
-	int status = 0;
+	int result = 0;
 
-	if (MINOR_SIZE == size) {
-		status = copy_from_user(tmp, user, MINOR_SIZE);
-		status += strncmp(tmp, minor, MINOR_SIZE - 1);
-		return status ? -EINVAL : size;
+	if (size == MINOR_SIZE) {
+		result = simple_write_to_buffer(tmp, MINOR_SIZE, offs, user,
+						size);
+		tmp[MINOR_SIZE - 1] = '\0';
 	} else
-		return -EINVAL;
+		result = -EINVAL;
+
+	if ((*offs) == strlen(tmp))
+		result = strncmp(tmp, minor, strlen(tmp)) ? -EINVAL : result;
+
+	return result;
 }
 
 MODULE_LICENSE("GPL");
