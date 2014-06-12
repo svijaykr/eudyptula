@@ -12,9 +12,11 @@ static ssize_t hello_read(struct file *fp, char __user *user, size_t size,
 static ssize_t hello_write(struct file *fp, const char __user *user,
 			size_t size, loff_t *offs);
 
-#define MINOR_SIZE 13
+#define EUDYPTULA_ID_SIZE 13
 
-static char minor[MINOR_SIZE] = "123456789012";
+#define EUDYPTULA_ID "123456789012"
+
+#define DEVICE_NAME "eudyptula"
 
 static const struct file_operations hello_fops = {
 	.owner = THIS_MODULE,
@@ -24,7 +26,7 @@ static const struct file_operations hello_fops = {
 
 static struct miscdevice hello_misc = {
 	.minor = MISC_DYNAMIC_MINOR,
-	.name = "eudyptula",
+	.name = DEVICE_NAME,
 	.fops = &hello_fops,
 };
 
@@ -44,24 +46,27 @@ module_exit(hello_exit);
 ssize_t hello_read(struct file *fp, char __user *user, size_t size,
 			loff_t *offs)
 {
-	return simple_read_from_buffer(user, size, offs, minor, strlen(minor));
+	return simple_read_from_buffer(user, size, offs, EUDYPTULA_ID, 
+				strlen(EUDYPTULA_ID));
 }
 
 ssize_t hello_write(struct file *fp, const char __user *user, size_t size,
 			loff_t *offs)
 {
-	char tmp[MINOR_SIZE];
+	char tmp[EUDYPTULA_ID_SIZE];
 	int result = 0;
 
-	if (size == MINOR_SIZE) {
-		result = simple_write_to_buffer(tmp, MINOR_SIZE-1,  offs, user,
-						size) + 1;
-		tmp[MINOR_SIZE - 1] = '\0';
+	if (size == EUDYPTULA_ID_SIZE) {
+		result = simple_write_to_buffer(tmp, EUDYPTULA_ID_SIZE-1,
+						offs, user, size) + 1;
+
+		tmp[EUDYPTULA_ID_SIZE - 1] = '\0';
 	} else
 		result = -EINVAL;
 
-	if ((*offs) == strlen(minor))
-		result = strncmp(tmp, minor, strlen(tmp)) ? -EINVAL : result;
+	if ((*offs) == strlen(EUDYPTULA_ID))
+		result = strncmp(tmp, EUDYPTULA_ID, strlen(EUDYPTULA_ID)) ? 
+			-EINVAL : result;
 
 	return result;
 }
