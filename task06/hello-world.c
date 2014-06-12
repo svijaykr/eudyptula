@@ -46,7 +46,7 @@ module_exit(hello_exit);
 ssize_t hello_read(struct file *fp, char __user *user, size_t size,
 			loff_t *offs)
 {
-	return simple_read_from_buffer(user, size, offs, EUDYPTULA_ID, 
+	return simple_read_from_buffer(user, size, offs, EUDYPTULA_ID,
 				strlen(EUDYPTULA_ID));
 }
 
@@ -65,7 +65,7 @@ ssize_t hello_write(struct file *fp, const char __user *user, size_t size,
 		result = -EINVAL;
 
 	if ((*offs) == strlen(EUDYPTULA_ID))
-		result = strncmp(tmp, EUDYPTULA_ID, strlen(EUDYPTULA_ID)) ? 
+		result = strncmp(tmp, EUDYPTULA_ID, strlen(EUDYPTULA_ID)) ?
 			-EINVAL : result;
 
 	return result;
