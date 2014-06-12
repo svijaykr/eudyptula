@@ -1,0 +1,8 @@
+root@eudyptula:/home/node/eudyptula/task06# echo 123456789012 > /dev/eudyptula
+root@eudyptula:/home/node/eudyptula/task06# echo 123456789013 > /dev/eudyptula
+-bash: echo: write error: Invalid argument
+root@eudyptula:/home/node/eudyptula/task06# echo 12 > /dev/eudyptula
+-bash: echo: write error: Invalid argument
+root@eudyptula:/home/node/eudyptula/task06# cat /dev/eudyptula
+123456789012root@eudyptula:/home/node/eudyptula/task06#
+
