@@ -12,10 +12,9 @@ static ssize_t hello_read(struct file *fp, char __user *user, size_t size,
 static ssize_t hello_write(struct file *fp, const char __user *user,
 			size_t size, loff_t *offs);
 
-#define MINOR_SIZE 3
+#define MINOR_SIZE 13
 
-static char minor[MINOR_SIZE] = "";
-
+static char minor[MINOR_SIZE] = "123456789012";
 
 static const struct file_operations hello_fops = {
 	.owner = THIS_MODULE,
@@ -31,9 +30,7 @@ static struct miscdevice hello_misc = {
 
 static int __init hello_init(void)
 {
-	int status = misc_register(&hello_misc);
-	snprintf(minor, MINOR_SIZE, "%d", hello_misc.minor);
-	return status;
+	return misc_register(&hello_misc);
 }
 
 module_init(hello_init);
@@ -53,17 +50,17 @@ ssize_t hello_read(struct file *fp, char __user *user, size_t size,
 ssize_t hello_write(struct file *fp, const char __user *user, size_t size,
 			loff_t *offs)
 {
-	char tmp[MINOR_SIZE] = "";
+	char tmp[MINOR_SIZE];
 	int result = 0;
 
 	if (size == MINOR_SIZE) {
-		result = simple_write_to_buffer(tmp, MINOR_SIZE, offs, user,
-						size);
+		result = simple_write_to_buffer(tmp, MINOR_SIZE-1,  offs, user,
+						size) + 1;
 		tmp[MINOR_SIZE - 1] = '\0';
 	} else
 		result = -EINVAL;
 
-	if ((*offs) == strlen(tmp))
+	if ((*offs) == strlen(minor))
 		result = strncmp(tmp, minor, strlen(tmp)) ? -EINVAL : result;
 
 	return result;
